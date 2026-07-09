@@ -47,11 +47,19 @@ function refreshAuthUI() {
 function connectSocket() {
   const token = getToken();
   if (!token || state.socket) return;
-  state.socket = io({ auth: { token } });
-  state.socket.on('notification', () => {
-    const dot = document.getElementById('notif-dot');
-    if (dot) dot.classList.remove('hidden');
-  });
+  try {
+    if (typeof io !== 'function') {
+      console.warn('Socket.IO client not loaded — real-time chat will be unavailable this session.');
+      return;
+    }
+    state.socket = io({ auth: { token } });
+    state.socket.on('notification', () => {
+      const dot = document.getElementById('notif-dot');
+      if (dot) dot.classList.remove('hidden');
+    });
+  } catch (err) {
+    console.warn('Socket connection failed:', err.message);
+  }
 }
 
 function requireAuth() {
