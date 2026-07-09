@@ -31,7 +31,20 @@ const io = new Server(server, {
 connectDB();
 
 // ---------- Security & core middleware ----------
-app.use(helmet({ crossOriginResourcePolicy: false }));
+app.use(
+  helmet({
+    crossOriginResourcePolicy: false,
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        imgSrc: ["'self'", "data:", "https:"],
+        scriptSrc: ["'self'", "https://cdn.socket.io"],
+        styleSrc: ["'self'", "https:", "'unsafe-inline'"],
+        connectSrc: ["'self'", "https:", "wss:"],
+      },
+    },
+  })
+);
 app.use(cors({ origin: process.env.CLIENT_URL || '*', credentials: true }));
 app.use(express.json({ limit: '2mb' }));
 app.use(express.urlencoded({ extended: true }));
