@@ -5,7 +5,7 @@ const UNSPLASH = {
   shoes: 'https://images.unsplash.com/photo-1520256862855-398228c41684?auto=format&fit=crop&w=700&q=70',
   jacket: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=700&q=70',
   accessory: 'https://images.unsplash.com/photo-1516762689617-e1cffcef479d?auto=format&fit=crop&w=700&q=70',
-  ethnic: 'https://images.unsplash.com/photo-1610189020217-16d8d7cec4c6?auto=format&fit=crop&w=700&q=70',
+  ethnic: 'https://picsum.photos/seed/swapwear-ethnic/700/467',
   activewear: 'https://images.unsplash.com/photo-1483721310020-03333e577078?auto=format&fit=crop&w=700&q=70',
   person1: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=70',
   person2: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100&q=70',
