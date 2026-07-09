@@ -1,0 +1,12 @@
+{
+  "name": "swapwear",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SwapWear — clothing exchange marketplace (single-service deploy: Express serves the API and the static frontend)",
+  "scripts": {
+    "install": "cd backend && npm install",
+    "start": "cd backend && npm start",
+    "dev": "cd backend && npm run dev",
+    "seed": "cd backend && npm run seed"
+  }
+}
