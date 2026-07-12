@@ -1,11 +1,12 @@
 const UNSPLASH = {
   rack: 'https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&w=700&q=70',
-  denim: 'https://share.google/2DOjj3W1CjRa7PraI',
+  denim: 'https://images.unsplash.com/photo-1533230464445-e01ef07c65c5?auto=format&fit=crop&w=700&q=70',
+  bottoms: 'https://images.unsplash.com/photo-1576995853123-5a10305d93c0?auto=format&fit=crop&w=700&q=70',
   dress: 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=700&q=70',
   shoes: 'https://images.unsplash.com/photo-1520256862855-398228c41684?auto=format&fit=crop&w=700&q=70',
   jacket: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=700&q=70',
   accessory: 'https://images.unsplash.com/photo-1516762689617-e1cffcef479d?auto=format&fit=crop&w=700&q=70',
-  ethnic: 'https://unsplash.com/photos/a-man-in-a-white-outfit-standing-in-front-of-a-green-wall-gXWVyFpRCRU',
+  ethnic: 'https://images.unsplash.com/photo-1729347917808-e3e35a462fec?auto=format&fit=crop&w=700&q=70',
   activewear: 'https://images.unsplash.com/photo-1483721310020-03333e577078?auto=format&fit=crop&w=700&q=70',
   person1: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=70',
   person2: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100&q=70',
@@ -52,7 +53,7 @@ async function renderLanding(app) {
           ${categoryCard('Accessories', UNSPLASH.accessory)}
           ${categoryCard('Ethnic Wear', UNSPLASH.ethnic)}
           ${categoryCard('Activewear', UNSPLASH.activewear)}
-          ${categoryCard('Bottoms', UNSPLASH.denim)}
+          ${categoryCard('Bottoms', UNSPLASH.bottoms)}
         </div>
       </div>
     </section>
