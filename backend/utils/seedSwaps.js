@@ -1,6 +1,8 @@
-@'
 require('dotenv').config();
 const mongoose = require('mongoose');
+const dns = require('dns');
+
+dns.setServers(['8.8.8.8', '1.1.1.1']);
 const User = require('../models/User');
 const Listing = require('../models/Listing');
 const SwapRequest = require('../models/SwapRequest');
@@ -102,4 +104,3 @@ run().catch((err) => {
   console.error(err);
   process.exit(1);
 });
-'@ | Out-File -FilePath utils\seedSwaps.js -Encoding utf8 
