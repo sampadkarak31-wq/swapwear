@@ -6,18 +6,12 @@ dns.setServers(['8.8.8.8', '1.1.1.1']);
 const User = require('../models/User');
 const Listing = require('../models/Listing');
 
-// Image URLs confirmed loading correctly on the live deployment — reused
-// across items instead of guessing new photo IDs that might 404.
-const IMG = {
-  rack: 'https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&w=900&q=70',
-  dress: 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=900&q=70',
-  jacket: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=900&q=70',
-  shoes: 'https://images.unsplash.com/photo-1520256862855-398228c41684?auto=format&fit=crop&w=900&q=70',
-  accessory: 'https://images.unsplash.com/photo-1516762689617-e1cffcef479d?auto=format&fit=crop&w=900&q=70',
-  activewear: 'https://images.unsplash.com/photo-1483721310020-03333e577078?auto=format&fit=crop&w=900&q=70',
-  denim: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=900&q=70',
-  ethnic: 'https://picsum.photos/seed/swapwear-ethnic/900/900',
-};
+// FIX: images are now generated per-item (unique "lock" id) instead of one
+// shared URL per category. loremflickr.com returns a real keyword-matched
+// photo per lock value, so every listing gets its own distinct, on-topic
+// image instead of 4 items sharing (and sometimes mismatching) one photo.
+const img = (keyword, lock) =>
+  `https://loremflickr.com/900/900/${encodeURIComponent(keyword)}?lock=${lock}`;
 
 const DEMO_SELLERS = [
   { name: 'Rohit Mehta', email: 'rohit.demo@swapwear.com', location: 'Mumbai' },
@@ -27,54 +21,56 @@ const DEMO_SELLERS = [
 ];
 
 // 4 items per category x 8 categories = 32 listings
+// `img(keyword, lock)` — lock must be unique across the whole list so no
+// two listings ever end up with the same photo.
 const LISTINGS = [
   // Tops
-  { title: 'Oxford Cotton Button-Down', category: 'Tops', gender: 'Men', brand: 'Uniqlo', size: 'M', condition: 'Like new', img: IMG.rack, value: 650, desc: 'Crisp white oxford shirt, worn twice for interviews. No stains or wear on the collar.' },
-  { title: 'Ribbed Knit Turtleneck', category: 'Tops', gender: 'Women', brand: 'Zara', size: 'S', condition: 'Gently used', img: IMG.rack, value: 550, desc: 'Soft ribbed turtleneck in cream, great for layering through winter.' },
-  { title: 'Oversized Graphic Tee', category: 'Tops', gender: 'Unisex', brand: 'H&M', size: 'L', condition: 'Well loved', img: IMG.rack, value: 250, desc: 'Faded band tee, lots of character left in it. True oversized fit.' },
-  { title: 'Silk Blouse, Emerald', category: 'Tops', gender: 'Women', brand: 'Fabindia', size: 'M', condition: 'New with tags', img: IMG.rack, value: 1200, desc: 'Never worn, tags still attached. Bought for an event that got cancelled.' },
+  { title: 'Oxford Cotton Button-Down', category: 'Tops', gender: 'Men', brand: 'Uniqlo', size: 'M', condition: 'Like new', img: img('dress-shirt', 1), value: 650, desc: 'Crisp white oxford shirt, worn twice for interviews. No stains or wear on the collar.' },
+  { title: 'Ribbed Knit Turtleneck', category: 'Tops', gender: 'Women', brand: 'Zara', size: 'S', condition: 'Gently used', img: img('turtleneck', 2), value: 550, desc: 'Soft ribbed turtleneck in cream, great for layering through winter.' },
+  { title: 'Oversized Graphic Tee', category: 'Tops', gender: 'Unisex', brand: 'H&M', size: 'L', condition: 'Well loved', img: img('graphic-tshirt', 3), value: 250, desc: 'Faded band tee, lots of character left in it. True oversized fit.' },
+  { title: 'Silk Blouse, Emerald', category: 'Tops', gender: 'Women', brand: 'Fabindia', size: 'M', condition: 'New with tags', img: img('silk-blouse', 4), value: 1200, desc: 'Never worn, tags still attached. Bought for an event that got cancelled.' },
 
   // Dresses
-  { title: 'Silk Wrap Dress', category: 'Dresses', gender: 'Women', brand: 'Zara', size: 'M', condition: 'Like new', img: IMG.dress, value: 1400, desc: 'Worn once to a wedding. Dry cleaned and stored carefully since.' },
-  { title: 'Floral Midi Sundress', category: 'Dresses', gender: 'Women', brand: 'H&M', size: 'S', condition: 'Gently used', img: IMG.dress, value: 700, desc: 'Perfect for summer brunches. Light cotton blend, breathable.' },
-  { title: 'Black Bodycon Evening Dress', category: 'Dresses', gender: 'Women', brand: "Levi's", size: 'M', condition: 'Like new', img: IMG.dress, value: 1600, desc: 'Elegant and versatile — worn for one dinner party.' },
-  { title: 'Boho Maxi Dress', category: 'Dresses', gender: 'Women', brand: 'Fabindia', size: 'L', condition: 'Well loved', img: IMG.dress, value: 600, desc: 'Flowy printed maxi, been through a few festivals and still going strong.' },
+  { title: 'Silk Wrap Dress', category: 'Dresses', gender: 'Women', brand: 'Zara', size: 'M', condition: 'Like new', img: img('wrap-dress', 5), value: 1400, desc: 'Worn once to a wedding. Dry cleaned and stored carefully since.' },
+  { title: 'Floral Midi Sundress', category: 'Dresses', gender: 'Women', brand: 'H&M', size: 'S', condition: 'Gently used', img: img('floral-dress', 6), value: 700, desc: 'Perfect for summer brunches. Light cotton blend, breathable.' },
+  { title: 'Black Bodycon Evening Dress', category: 'Dresses', gender: 'Women', brand: "Levi's", size: 'M', condition: 'Like new', img: img('evening-dress', 7), value: 1600, desc: 'Elegant and versatile — worn for one dinner party.' },
+  { title: 'Boho Maxi Dress', category: 'Dresses', gender: 'Women', brand: 'Fabindia', size: 'L', condition: 'Well loved', img: img('maxi-dress', 8), value: 600, desc: 'Flowy printed maxi, been through a few festivals and still going strong.' },
 
   // Outerwear
-  { title: 'Vintage Denim Jacket', category: 'Outerwear', gender: 'Unisex', brand: "Levi's", size: 'M', condition: 'Gently used', img: IMG.jacket, value: 1800, desc: 'Classic trucker jacket, broken in perfectly. A few authentic distressed patches.' },
-  { title: 'Wool Blend Overcoat', category: 'Outerwear', gender: 'Men', brand: 'Zara', size: 'L', condition: 'Like new', img: IMG.jacket, value: 2400, desc: 'Charcoal wool overcoat, worn one winter season. Dry cleaned, ready to go.' },
-  { title: 'Cropped Leather Jacket', category: 'Outerwear', gender: 'Women', brand: 'H&M', size: 'S', condition: 'Gently used', img: IMG.jacket, value: 2100, desc: 'Faux leather, cropped fit. Zipper and lining in great shape.' },
-  { title: 'Quilted Puffer Vest', category: 'Outerwear', gender: 'Unisex', brand: 'Uniqlo', size: 'M', condition: 'Like new', img: IMG.jacket, value: 900, desc: 'Lightweight and warm, barely worn — moving somewhere warmer.' },
+  { title: 'Vintage Denim Jacket', category: 'Outerwear', gender: 'Unisex', brand: "Levi's", size: 'M', condition: 'Gently used', img: img('denim-jacket', 9), value: 1800, desc: 'Classic trucker jacket, broken in perfectly. A few authentic distressed patches.' },
+  { title: 'Wool Blend Overcoat', category: 'Outerwear', gender: 'Men', brand: 'Zara', size: 'L', condition: 'Like new', img: img('wool-overcoat', 10), value: 2400, desc: 'Charcoal wool overcoat, worn one winter season. Dry cleaned, ready to go.' },
+  { title: 'Cropped Leather Jacket', category: 'Outerwear', gender: 'Women', brand: 'H&M', size: 'S', condition: 'Gently used', img: img('leather-jacket', 11), value: 2100, desc: 'Faux leather, cropped fit. Zipper and lining in great shape.' },
+  { title: 'Quilted Puffer Vest', category: 'Outerwear', gender: 'Unisex', brand: 'Uniqlo', size: 'M', condition: 'Like new', img: img('puffer-vest', 12), value: 900, desc: 'Lightweight and warm, barely worn — moving somewhere warmer.' },
 
   // Footwear
-  { title: 'Leather Sneakers', category: 'Footwear', gender: 'Unisex', brand: 'Clarks', size: 'UK 8', condition: 'Gently used', img: IMG.shoes, value: 1500, desc: 'Genuine leather, minor scuffing on the toe, otherwise great condition.' },
-  { title: 'Running Shoes', category: 'Footwear', gender: 'Men', brand: 'Nike', size: 'UK 9', condition: 'Well loved', img: IMG.shoes, value: 1100, desc: 'Good for another few hundred km. Cushioning still solid.' },
-  { title: 'Block Heel Sandals', category: 'Footwear', gender: 'Women', brand: 'Zara', size: 'UK 6', condition: 'Like new', img: IMG.shoes, value: 900, desc: 'Worn indoors once to check the fit — turned out too small.' },
-  { title: 'Canvas High-Tops', category: 'Footwear', gender: 'Unisex', brand: 'H&M', size: 'UK 7', condition: 'Gently used', img: IMG.shoes, value: 700, desc: 'Classic white canvas high-tops, freshly cleaned.' },
+  { title: 'Leather Sneakers', category: 'Footwear', gender: 'Unisex', brand: 'Clarks', size: 'UK 8', condition: 'Gently used', img: img('leather-sneakers', 13), value: 1500, desc: 'Genuine leather, minor scuffing on the toe, otherwise great condition.' },
+  { title: 'Running Shoes', category: 'Footwear', gender: 'Men', brand: 'Nike', size: 'UK 9', condition: 'Well loved', img: img('running-shoes', 14), value: 1100, desc: 'Good for another few hundred km. Cushioning still solid.' },
+  { title: 'Block Heel Sandals', category: 'Footwear', gender: 'Women', brand: 'Zara', size: 'UK 6', condition: 'Like new', img: img('heel-sandals', 15), value: 900, desc: 'Worn indoors once to check the fit — turned out too small.' },
+  { title: 'Canvas High-Tops', category: 'Footwear', gender: 'Unisex', brand: 'H&M', size: 'UK 7', condition: 'Gently used', img: img('canvas-sneakers', 16), value: 700, desc: 'Classic white canvas high-tops, freshly cleaned.' },
 
   // Accessories
-  { title: 'Beaded Evening Clutch', category: 'Accessories', gender: 'Women', brand: 'Local artisan', size: 'One size', condition: 'Like new', img: IMG.accessory, value: 800, desc: 'Handmade beaded clutch, used once. Comes with the original dust bag.' },
-  { title: 'Leather Belt, Tan', category: 'Accessories', gender: 'Men', brand: "Levi's", size: '32', condition: 'Gently used', img: IMG.accessory, value: 450, desc: 'Genuine leather belt, classic buckle, ages well.' },
-  { title: 'Silk Scarf Set', category: 'Accessories', gender: 'Women', brand: 'Fabindia', size: 'One size', condition: 'New with tags', img: IMG.accessory, value: 550, desc: 'Set of two printed silk scarves, never used, tags on.' },
-  { title: 'Structured Tote Bag', category: 'Accessories', gender: 'Unisex', brand: 'Zara', size: 'One size', condition: 'Gently used', img: IMG.accessory, value: 1300, desc: 'Roomy structured tote, great for work. Interior pocket intact.' },
+  { title: 'Beaded Evening Clutch', category: 'Accessories', gender: 'Women', brand: 'Local artisan', size: 'One size', condition: 'Like new', img: img('clutch-bag', 17), value: 800, desc: 'Handmade beaded clutch, used once. Comes with the original dust bag.' },
+  { title: 'Leather Belt, Tan', category: 'Accessories', gender: 'Men', brand: "Levi's", size: '32', condition: 'Gently used', img: img('leather-belt', 18), value: 450, desc: 'Genuine leather belt, classic buckle, ages well.' },
+  { title: 'Silk Scarf Set', category: 'Accessories', gender: 'Women', brand: 'Fabindia', size: 'One size', condition: 'New with tags', img: img('silk-scarf', 19), value: 550, desc: 'Set of two printed silk scarves, never used, tags on.' },
+  { title: 'Structured Tote Bag', category: 'Accessories', gender: 'Unisex', brand: 'Zara', size: 'One size', condition: 'Gently used', img: img('tote-bag', 20), value: 1300, desc: 'Roomy structured tote, great for work. Interior pocket intact.' },
 
   // Ethnic Wear
-  { title: 'Handloom Cotton Kurta', category: 'Ethnic Wear', gender: 'Men', brand: 'Fabindia', size: 'L', condition: 'Like new', img: IMG.ethnic, value: 950, desc: 'Handwoven cotton kurta, worn once for a family function.' },
-  { title: 'Embroidered Anarkali Suit', category: 'Ethnic Wear', gender: 'Women', brand: 'Local artisan', size: 'M', condition: 'Gently used', img: IMG.ethnic, value: 2800, desc: 'Detailed thread embroidery, dry cleaned after each wear.' },
-  { title: 'Banarasi Silk Dupatta', category: 'Ethnic Wear', gender: 'Women', brand: 'Local artisan', size: 'One size', condition: 'New with tags', img: IMG.ethnic, value: 1600, desc: 'Authentic Banarasi weave, still has the shop tag.' },
-  { title: 'Nehru Jacket, Navy', category: 'Ethnic Wear', gender: 'Men', brand: 'Fabindia', size: 'M', condition: 'Like new', img: IMG.ethnic, value: 1400, desc: 'Worn for one wedding season, professionally stored since.' },
+  { title: 'Handloom Cotton Kurta', category: 'Ethnic Wear', gender: 'Men', brand: 'Fabindia', size: 'L', condition: 'Like new', img: img('kurta', 21), value: 950, desc: 'Handwoven cotton kurta, worn once for a family function.' },
+  { title: 'Embroidered Anarkali Suit', category: 'Ethnic Wear', gender: 'Women', brand: 'Local artisan', size: 'M', condition: 'Gently used', img: img('anarkali', 22), value: 2800, desc: 'Detailed thread embroidery, dry cleaned after each wear.' },
+  { title: 'Banarasi Silk Dupatta', category: 'Ethnic Wear', gender: 'Women', brand: 'Local artisan', size: 'One size', condition: 'New with tags', img: img('saree', 23), value: 1600, desc: 'Authentic Banarasi weave, still has the shop tag.' },
+  { title: 'Nehru Jacket, Navy', category: 'Ethnic Wear', gender: 'Men', brand: 'Fabindia', size: 'M', condition: 'Like new', img: img('nehru-jacket', 24), value: 1400, desc: 'Worn for one wedding season, professionally stored since.' },
 
   // Activewear
-  { title: 'Running Tights', category: 'Activewear', gender: 'Women', brand: 'Nike', size: 'S', condition: 'Gently used', img: IMG.activewear, value: 600, desc: 'High-waisted, good compression, no pilling.' },
-  { title: 'Moisture-Wick Training Tee', category: 'Activewear', gender: 'Men', brand: 'Nike', size: 'M', condition: 'Well loved', img: IMG.activewear, value: 350, desc: 'Been through a lot of gym sessions, still performs well.' },
-  { title: 'Yoga Set, Sage Green', category: 'Activewear', gender: 'Women', brand: 'Uniqlo', size: 'S', condition: 'Like new', img: IMG.activewear, value: 950, desc: 'Matching top and leggings, worn for one photoshoot only.' },
-  { title: 'Track Jacket, Retro', category: 'Activewear', gender: 'Unisex', brand: 'H&M', size: 'L', condition: 'Gently used', img: IMG.activewear, value: 700, desc: 'Retro stripe track jacket, lightweight, zips fully.' },
+  { title: 'Running Tights', category: 'Activewear', gender: 'Women', brand: 'Nike', size: 'S', condition: 'Gently used', img: img('running-tights', 25), value: 600, desc: 'High-waisted, good compression, no pilling.' },
+  { title: 'Moisture-Wick Training Tee', category: 'Activewear', gender: 'Men', brand: 'Nike', size: 'M', condition: 'Well loved', img: img('training-tee', 26), value: 350, desc: 'Been through a lot of gym sessions, still performs well.' },
+  { title: 'Yoga Set, Sage Green', category: 'Activewear', gender: 'Women', brand: 'Uniqlo', size: 'S', condition: 'Like new', img: img('yoga-outfit', 27), value: 950, desc: 'Matching top and leggings, worn for one photoshoot only.' },
+  { title: 'Track Jacket, Retro', category: 'Activewear', gender: 'Unisex', brand: 'H&M', size: 'L', condition: 'Gently used', img: img('track-jacket', 28), value: 700, desc: 'Retro stripe track jacket, lightweight, zips fully.' },
 
   // Bottoms
-  { title: 'Slim Fit Jeans', category: 'Bottoms', gender: 'Men', brand: "Levi's", size: '32', condition: 'Gently used', img: IMG.denim, value: 1100, desc: 'Classic 511 slim fit, no rips, medium wash.' },
-  { title: 'Wide-Leg Trousers', category: 'Bottoms', gender: 'Women', brand: 'Zara', size: 'M', condition: 'Like new', img: IMG.denim, value: 900, desc: 'Flowy wide-leg trousers, worn twice to the office.' },
-  { title: 'Cotton Chinos, Khaki', category: 'Bottoms', gender: 'Men', brand: 'Uniqlo', size: '32', condition: 'Gently used', img: IMG.denim, value: 700, desc: 'Versatile khaki chinos, machine washed, holding shape well.' },
-  { title: 'High-Waisted Denim Shorts', category: 'Bottoms', gender: 'Women', brand: "Levi's", size: 'S', condition: 'Well loved', img: IMG.denim, value: 500, desc: 'Well-loved summer staple, some natural fading, no damage.' },
+  { title: 'Slim Fit Jeans', category: 'Bottoms', gender: 'Men', brand: "Levi's", size: '32', condition: 'Gently used', img: img('slim-jeans', 29), value: 1100, desc: 'Classic 511 slim fit, no rips, medium wash.' },
+  { title: 'Wide-Leg Trousers', category: 'Bottoms', gender: 'Women', brand: 'Zara', size: 'M', condition: 'Like new', img: img('trousers', 30), value: 900, desc: 'Flowy wide-leg trousers, worn twice to the office.' },
+  { title: 'Cotton Chinos, Khaki', category: 'Bottoms', gender: 'Men', brand: 'Uniqlo', size: '32', condition: 'Gently used', img: img('chinos', 31), value: 700, desc: 'Versatile khaki chinos, machine washed, holding shape well.' },
+  { title: 'High-Waisted Denim Shorts', category: 'Bottoms', gender: 'Women', brand: "Levi's", size: 'S', condition: 'Well loved', img: img('denim-shorts', 32), value: 500, desc: 'Well-loved summer staple, some natural fading, no damage.' },
 ];
 
 const run = async () => {
