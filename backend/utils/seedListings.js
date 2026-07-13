@@ -17,7 +17,7 @@ const IMG = {
   Outerwear: 'https://images.unsplash.com/photo-1596909690156-4dc0a3477e2d?auto=format&fit=crop&w=900&q=70',
   Footwear: 'https://images.unsplash.com/photo-1692977121283-231a7f4987fe?auto=format&fit=crop&w=900&q=70',
   Accessories: 'https://images.unsplash.com/photo-1473188588951-666fce8e7c68?auto=format&fit=crop&w=900&q=70',
-  Ethnic wear: 'https://images.unsplash.com/photo-1743229995505-d6374996df1c?auto=format&fit=crop&w=900&q=70',
+  'Ethnic Wear': 'https://images.unsplash.com/photo-1743229995505-d6374996df1c?auto=format&fit=crop&w=900&q=70',
   Activewear: 'https://images.unsplash.com/photo-1596641211273-938aeaf926a9?auto=format&fit=crop&w=900&q=70',
   Bottoms: 'https://images.unsplash.com/photo-1515459961680-58264ee27219?auto=format&fit=crop&w=900&q=70',
 };
