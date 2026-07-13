@@ -6,28 +6,23 @@ dns.setServers(['8.8.8.8', '1.1.1.1']);
 const User = require('../models/User');
 const Listing = require('../models/Listing');
 
-// FIX (v2): loremflickr.com pulls random, unmoderated Flickr photos by
-// keyword tag and returned inappropriate/unrelated results for some items.
-// Replaced with placehold.co -- a deterministic placeholder generator that
-// renders ONLY the product title as text on a solid color card. No photo
-// lookup, no randomness, no risk of mismatched or inappropriate content.
-// Each category gets its own color so the site still looks organized.
-const CATEGORY_COLORS = {
-  Tops: '6B7A8F',
-  Dresses: 'B5657A',
-  Outerwear: '4A5A4A',
-  Footwear: '8C6A4A',
-  Accessories: '7A5C8A',
-  'Ethnic Wear': 'B8863B',
-  Activewear: '3B7A8C',
-  Bottoms: '5A5A6E',
+// FIX (v3): Each photo below was individually verified by fetching its
+// Unsplash page and confirming (a) the actual image content matches the
+// category and (b) it is "Free to use under the Unsplash License" (not a
+// branded retailer photo). Shared per-category (not per-item) to keep the
+// verified set small and auditable.
+const IMG = {
+  Tops: 'https://images.unsplash.com/photo-1620799139507-2a76f79a2f4d?auto=format&fit=crop&w=900&q=70',
+  Dresses: 'https://images.unsplash.com/photo-1669194792519-710af63a67f9?auto=format&fit=crop&w=900&q=70',
+  Outerwear: 'https://images.unsplash.com/photo-1596909690156-4dc0a3477e2d?auto=format&fit=crop&w=900&q=70',
+  Footwear: 'https://images.unsplash.com/photo-1692977121283-231a7f4987fe?auto=format&fit=crop&w=900&q=70',
+  Accessories: 'https://images.unsplash.com/photo-1473188588951-666fce8e7c68?auto=format&fit=crop&w=900&q=70',
+  Ethnic wear: 'https://images.unsplash.com/photo-1743229995505-d6374996df1c?auto=format&fit=crop&w=900&q=70',
+  Activewear: 'https://images.unsplash.com/photo-1596641211273-938aeaf926a9?auto=format&fit=crop&w=900&q=70',
+  Bottoms: 'https://images.unsplash.com/photo-1515459961680-58264ee27219?auto=format&fit=crop&w=900&q=70',
 };
 
-const img = (title, category) => {
-  const color = CATEGORY_COLORS[category] || '999999';
-  const text = encodeURIComponent(title);
-  return `https://placehold.co/900x900/${color}/FFFFFF?text=${text}&font=roboto`;
-};
+const img = (title, category) => IMG[category] || IMG.Tops;
 
 const DEMO_SELLERS = [
   { name: 'Rohit Mehta', email: 'rohit.demo@swapwear.com', location: 'Mumbai' },
