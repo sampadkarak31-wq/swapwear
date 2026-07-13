@@ -34,11 +34,8 @@ const DEMO_SELLERS = [
 // 4 items per category x 8 categories = 32 listings
 const LISTINGS = [
   // Tops
-  { title: 'Oxford Cotton Button-Down', category: 'Tops', gender: 'Men', brand: 'Uniqlo', size: 'M', condition: 'Like new', value: 650, desc: 'Crisp white oxford shirt, worn twice for interviews. No stains or wear on the collar.' },
-  { title: 'Ribbed Knit Turtleneck', category: 'Tops', gender: 'Women', brand: 'Zara', size: 'S', condition: 'Gently used', value: 550, desc: 'Soft ribbed turtleneck in cream, great for layering through winter.' },
   { title: 'Oversized Graphic Tee', category: 'Tops', gender: 'Unisex', brand: 'H&M', size: 'L', condition: 'Well loved', value: 250, desc: 'Faded band tee, lots of character left in it. True oversized fit.' },
-  { title: 'Silk Blouse, Emerald', category: 'Tops', gender: 'Women', brand: 'Fabindia', size: 'M', condition: 'New with tags', value: 1200, desc: 'Never worn, tags still attached. Bought for an event that got cancelled.' },
-
+ 
   // Dresses
   { title: 'Silk Wrap Dress', category: 'Dresses', gender: 'Women', brand: 'Zara', size: 'M', condition: 'Like new', value: 1400, desc: 'Worn once to a wedding. Dry cleaned and stored carefully since.' },
   { title: 'Floral Midi Sundress', category: 'Dresses', gender: 'Women', brand: 'H&M', size: 'S', condition: 'Gently used', value: 700, desc: 'Perfect for summer brunches. Light cotton blend, breathable.' },
