@@ -9,7 +9,7 @@
     "dev": "nodemon server.js",
     "seed": "node utils/seed.js",
     "seed:listings": "node utils/seedListings.js",
-    
+    "seed:swaps" : "node utils/seedSwaps.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
